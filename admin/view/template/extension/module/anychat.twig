@@ -1,0 +1,262 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+            </div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        {% for err in errors %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ err }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <ul class="nav nav-pills nav-stacked" id="anychat-config-tabs">
+                                <li role="presentation" class="active">
+                                    <a href="#" data-target="anychat-general-tab">General configuration</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#" data-target="anychat-help-tab">How to setup</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#" data-target="anychat-about-tab">About</a>
+                                </li>
+                            </ul>  
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <style type="text/css">
+                            .integration-type-option img{
+                                padding: 6px;
+                                border: 2px solid transparent;
+                                border-radius: 5px;
+                                transition: 0.2s all;
+                                background: #e4e4e4;
+                                cursor: pointer;
+                            }
+                            .integration-type-option.active img{
+                                border-color: #00aff0;
+                            }
+                            .integration-type-option div{
+                                text-align: center;
+                                font-size: 16px;
+                                margin-bottom: 2px;
+                            }
+                            #anychat-config-tabs li a{
+                                border-radius: 0;
+                            }
+                            .ui.segment:first-child {
+                                margin-top: 0;
+                            }
+                            .ui.segment {
+                                background: #fff none repeat scroll 0 0;
+                                border: 1px solid rgba(34, 36, 38, 0.15);
+                                border-radius: 0.285714rem;
+                                box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
+                                margin: 1rem 0;
+                                padding: 1em;
+                                position: relative;
+                            }
+                            .ui.segment dt {
+                                border: 1px solid gray;
+                                border-radius: 50%;
+                                color: #333;
+                                float: left;
+                                font-family: "Open Sans",sans-serif;
+                                font-weight: 600;
+                                height: 35px;
+                                line-height: 34px;
+                                padding-bottom: 2em;
+                                text-align: center;
+                                vertical-align: middle;
+                                width: 35px;
+                            }
+                            .ui.segment dd {
+                                color: #333;
+                                padding-bottom: 0;
+                                padding-left: 1em;
+                                padding-top: 0.22em;
+                                margin-left: 40px;
+                            }
+                            .ui.segment dd p{
+                                margin-bottom: 15px;
+                            }
+                            .ui.piled.segment {
+                                font-weight: 400;
+                                padding-top: 1em;
+                                margin: 3em 0;
+                                z-index: auto;
+                            }
+                            .ui.piled.segments::after, .ui.piled.segments::before, .ui.piled.segment::after, .ui.piled.segment::before {
+                                background-color: #fff;
+                                border: 1px solid rgba(34, 36, 38, 0.15);
+                                content: "";
+                                display: block;
+                                height: 100%;
+                                left: 0;
+                                position: absolute;
+                                visibility: visible;
+                                width: 100%;
+                            }
+                            .ui.piled.segments::after, .ui.piled.segment::after {
+                                top: 0;
+                                transform: rotate(1.2deg);
+                                z-index: -1;
+                            }
+                            .ui.piled.segments::after, .ui.piled.segments::before, .ui.piled.segment::after, .ui.piled.segment::before {
+                                background-color: #fff;
+                                border: 1px solid rgba(34, 36, 38, 0.15);
+                                content: "";
+                                display: block;
+                                height: 100%;
+                                left: 0;
+                                position: absolute;
+                                visibility: visible;
+                                width: 100%;
+                            }
+                            .ui.piled.segments::before, .ui.piled.segment::before {
+                                top: 0;
+                                transform: rotate(-1.2deg);
+                                z-index: -2;
+                            }
+                            #anychat-help-tab img,
+                            #anychat-help-tab img{
+                                max-width: 600px;
+                                padding: 2px;
+                                border: 1px solid #DDD;
+                                border-radius: 5px;
+                                margin-top: 2px;
+                            }
+                        </style>
+                        <div class="panel anychat-config-panel panel-default {% if activeTab != 'anychat-general-tab' %} hidden {% endif %}" id="anychat-general-tab">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ general_config }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+                                    <input type="hidden" name="activeTab" value="anychat-general-tab" />
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                          <div class="col-sm-10">
+                                              <label class="col-sm-10 checkbox-inline" for="anychat_sandbox">
+                                                  <input type="hidden" class="form-check-input" value="0" name="anychat_sandbox" />
+                                                  <input type="checkbox" class="form-check-input" value="1" name="anychat_sandbox" id="anychat_sandbox" {% if settings.anychat_sandbox %} checked="" {% endif %} />
+                                                  {{ labels.sandbox }}
+                                              </label>
+                                          </div>
+                                    </div>
+                                    <div class="form-group {% if settings.anychat_sandbox != 1 %} hidden {% endif %}" id="anychat_allowed_ips_container">
+                                        <label class="col-sm-2 control-label" for="input-status">{{ labels.allowed_ips }}</label>
+                                        <div class="col-sm-10">
+                                          <textarea id="anychat_allowed_ips" class="form-control" name="anychat_allowed_ips">{{ settings.anychat_allowed_ips }}</textarea>
+                                          <div class="helper-text">{{ allowed_ips_helper }} {{ current_ip }}</div>  
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                          <div class="col-sm-10">
+                                              <label class="col-sm-10 checkbox-inline" for="anychat_disable_admin">
+                                                  <input type="hidden" class="form-check-input" value="0" name="anychat_disable_admin" />
+                                                  <input type="checkbox" class="form-check-input" value="1" name="anychat_disable_admin" id="anychat_disable_admin" {% if settings.anychat_disable_admin %} checked="" {% endif %} />
+                                                  {{ labels.disable_admin }}
+                                              </label>
+                                          </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                          <div class="col-sm-10">
+                                              <label class="col-sm-10 checkbox-inline" for="anychat_customerinfo">
+                                                  <input type="hidden" class="form-check-input" value="0" name="anychat_customerinfo" />
+                                                  <input type="checkbox" class="form-check-input" value="1" name="anychat_customerinfo" id="anychat_disable_admin" {% if settings.anychat_customerinfo %} checked="" {% endif %} />
+                                                  {{ labels.customerinfo }}
+                                              </label>
+                                          </div>
+                                    </div>
+                                    <div class="form-group {% if errors.anychat_api_key is defined %} has-error {% endif %}">
+                                        <label class="col-sm-2 control-label" for="anychat_api_key">{{ labels.api_key }}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="anychat_api_key" class="form-control" name="anychat_api_key" value="{{ settings.anychat_api_key }}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group {% if errors.anychat_widget_id is defined %} has-error {% endif %}">
+                                        <label class="col-sm-2 control-label" for="anychat_widget_id">{{ labels.widget_id }}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="anychat_widget_id" class="form-control" name="anychat_widget_id" value="{{ settings.anychat_widget_id }}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="integration_type">{{ labels.integration_type }}</label>
+                                        <div class="col-sm-10">
+                                            <div class="row" id="ARAC_INTEGRATION_TYPE-container">
+                                                <input type="hidden" value="2" name="anychat_integration_type" id="integration_type">
+                                                <div class="col-lg-3 integration-type-option {% if settings.anychat_integration_type == 2 %} active {% endif %}" data-value="2">
+                                                    <div>{{ menu_button }}</div>
+                                                    <img class="img-responsive" src="https://api.anychat.one/img/menu-button-mockup.png">
+                                                </div>
+                                                <div class="col-lg-3 integration-type-option {% if settings.anychat_integration_type == 1 %} active {% endif %}" data-value="1">
+                                                    <div>{{ live_chat_widget }}</div>
+                                                    <img class="img-responsive" src="https://api.anychat.one/img/livechat-mockup.png">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {{ helpTabContent }}
+                        {{ aboutTabContent }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        $('.integration-type-option').click(function(){
+            var val = $(this).data('value');
+            $('#integration_type').val(val);
+            $('.integration-type-option.active').removeClass('active');
+            $(this).addClass('active');
+        });
+        $('#anychat_sandbox').change(function(){
+           if ($('#anychat_sandbox').is(':checked')) {
+               $('#anychat_allowed_ips_container').removeClass('hidden');
+           } else {
+               $('#anychat_allowed_ips_container').addClass('hidden');
+           }
+        });
+        $('#anychat-config-tabs a').click(function(e){
+            e.preventDefault();
+            var t = $(this).data('target');
+            $('.anychat-config-panel').addClass('hidden');
+            $('#' + t).removeClass('hidden');
+            $('#anychat-config-tabs li.active').removeClass('active');
+            $(this).parent().addClass('active');
+            return false;
+        });
+    });
+</script>
+{{ footer }}

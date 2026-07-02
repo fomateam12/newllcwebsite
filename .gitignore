@@ -1,0 +1,7 @@
+config.php
+admin/config.php
+error_log
+*.log
+.DS_Store
+__MACOSX/
+image/

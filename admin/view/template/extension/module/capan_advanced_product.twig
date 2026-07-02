@@ -1,0 +1,234 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <style>
+        /* The container */
+.kategori_kutumuz {
+
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.kategori_kutumuz input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.kategori_kutumuz:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.kategori_kutumuz input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.kategori_kutumuz input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.kategori_kutumuz .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+</style>
+    <div class="container-fluid">
+        {% if error_warning %}
+        <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ info_capan }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ metin_gosterimayar }}</label>
+                        <div class="col-sm-10">
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay1 }}
+                                {% if module_capan_advanced_product_kategori1 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori1" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori1">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay2 }}
+                                {% if module_capan_advanced_product_kategori2 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori2" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori2">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay3 }}
+                                {% if module_capan_advanced_product_kategori3 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori3" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori3">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay4 }}
+                                {% if module_capan_advanced_product_kategori4 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori4" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori4">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay5 }}
+                                {% if module_capan_advanced_product_kategori5 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori5" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori5">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay6 }}
+                                {% if module_capan_advanced_product_kategori6 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori6" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori6">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay7 }}
+                                {% if module_capan_advanced_product_kategori7 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori7" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori7">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay8 }}
+                                {% if module_capan_advanced_product_kategori8 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori8" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori8">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="kategori_kutumuz col-md-12">{{ metin_onay9 }}
+                                {% if module_capan_advanced_product_kategori9 %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori9" checked>
+                                {% else %}
+                                <input type="checkbox" value="1" name="module_capan_advanced_product_kategori9">
+                                {% endif %}
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ metin_koduretyazi }}</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-4">
+                                <input type="text" value="{{ module_capan_advanced_product_onek }}" placeholder="{{ metin_onek }}" class="form-control" name="module_capan_advanced_product_onek">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="number" value="{{ module_capan_advanced_product_kodKarakter }}" placeholder="{{metin_koduzunluk }}" min="3" max="10" step="1" class="form-control" name="module_capan_advanced_product_kodKarakter">
+                            </div>
+                            <div class="col-sm-4">
+                                <select name="module_capan_advanced_product_kodTip" id="input-status" class="form-control">
+                                    {% if module_capan_advanced_product_kodTip=="1" %}
+                                    <option value="s">{{ metin_kodicerik }}</option>
+                                    <option value="1" selected="selected">{{ metin_sadesayi }}</option>
+                                    <option value="2">{{ metin_sadekarakter }}</option>
+                                    <option value="3">{{ metin_sadeikisi }}</option>
+                                    {% elseif module_capan_advanced_product_kodTip=="2" %}
+                                    <option value="s">{{ metin_kodicerik }}</option>
+                                    <option value="1">{{ metin_sadesayi }}</option>
+                                    <option value="2" selected="selected">{{ metin_sadekarakter }}</option>
+                                    <option value="3">{{ metin_sadeikisi }}</option>
+                                    {% elseif module_capan_advanced_product_kodTip=="3" %}
+                                    <option value="s">{{ metin_kodicerik }}</option>
+                                    <option value="1">{{ metin_sadesayi }}</option>
+                                    <option value="2">{{ metin_sadekarakter }}</option>
+                                    <option value="3" selected="selected">{{ metin_sadeikisi }}</option>
+                                    {% else %}
+                                    <option value="s" selected="selected">{{ metin_kodicerik }}</option>
+                                    <option value="1">{{ metin_sadesayi }}</option>
+                                    <option value="2">{{ metin_sadekarakter }}</option>
+                                    <option value="3">{{ metin_sadeikisi }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                        <div class=" col-sm-10">
+                            <select name="module_capan_advanced_product_status" id="input-status" class="form-control">
+                                {% if module_capan_advanced_product_status %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{{ footer }}

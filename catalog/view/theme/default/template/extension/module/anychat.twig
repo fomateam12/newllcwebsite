@@ -1,0 +1,25 @@
+<script>
+{% if customerLoggedIn and settings.anychat_customerinfo %}
+var anychatWidgetVisitor = {
+    name: '{{ customerName }}',
+    email: '{{ customerEmail }}'
+};
+{% endif %}
+{% if settings.anychat_integration_type == 1 %}
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://api.anychat.one/widget/{{ settings.anychat_widget_id }}/livechat-js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'contactus-jssdk'));
+{% else %}
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://api.anychat.one/widget/{{ settings.anychat_widget_id }}';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'contactus-jssdk'));
+{%  endif %}
+</script>
