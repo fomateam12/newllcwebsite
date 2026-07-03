@@ -157,11 +157,14 @@ export default async function Home() {
           TODO(analytics): switch to real sales data (see getBestsellers). */}
       {bestsellers.length > 0 && (
         <section className="border-t border-line py-10">
-          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
+          {/* stacked on mobile / fixed columns on sm+ so web-font width
+              changes can't re-wrap this row (CLS) */}
+          <div className="mb-6 grid items-baseline gap-1 sm:grid-cols-[auto_1fr] sm:gap-4">
             <h2 className="font-display text-2xl text-ink">Bestsellers</h2>
-            <p className="text-sm text-ink/50">The pieces our workshop makes most</p>
+            <p className="text-sm text-ink/50 sm:text-right">The pieces our workshop makes most</p>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {/* min-h reserves two title lines so font swap can't shift the grid */}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 [&_h3]:min-h-[2.75em]">
             {bestsellers.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

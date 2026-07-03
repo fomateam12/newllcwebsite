@@ -134,8 +134,13 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         </ol>
       </nav>
 
-      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-4">
-        <h1 className="font-display text-3xl text-ink">{cat.name}</h1>
+      {/* grid-cols-[1fr_auto] (not flex-wrap): with wrap, fallback-font metrics
+          push the count to its own line until the web font loads — a 24px CLS
+          jump for everything below. A fixed column keeps it beside the h1. */}
+      <div className="grid grid-cols-[1fr_auto] items-baseline gap-2 border-b border-line pb-4">
+        {/* text-2xl on mobile: at text-3xl the serif fallback wraps long
+            category names to 2 lines until Fraunces loads (one-line CLS) */}
+        <h1 className="font-display text-2xl text-ink sm:text-3xl">{cat.name}</h1>
         <p className="font-mono text-xs text-ink/50">
           {hasPriceFilter ? (
             <>
@@ -185,7 +190,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </p>
         )
       ) : (
-        <div className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-3 lg:grid-cols-4">
+        // [&_h3]:min-h-[2.75em] reserves two title lines (leading-snug = 1.375)
+        // so the web-font swap can't change card heights (CLS). ProductCard
+        // itself is owned by another branch, hence the descendant variant.
+        <div className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-3 lg:grid-cols-4 [&_h3]:min-h-[2.75em]">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
