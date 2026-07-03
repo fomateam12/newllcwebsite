@@ -196,10 +196,24 @@ for (const c of ocCategories) {
   if (!desc) continue; // no name in default language → unusable
   catIds.add(id);
 }
-for (const c of ocCategories) {
+// Topological order: parents before children, so immediate FK checks pass
+// (remote D1 does not reliably honor defer_foreign_keys across a file import).
+const byId = new Map(ocCategories.map((c) => [c.category_id as number, c]));
+const emitted = new Set<number>();
+const sortedCats: Row[] = [];
+function emitCat(id: number) {
+  if (emitted.has(id) || !catIds.has(id)) return;
+  emitted.add(id); // mark before recursing (cycle guard)
+  const c = byId.get(id)!;
+  const parent = c.parent_id as number;
+  if (parent && catIds.has(parent)) emitCat(parent);
+  sortedCats.push(c);
+}
+for (const c of ocCategories) emitCat(c.category_id as number);
+
+for (const c of sortedCats) {
   const id = c.category_id as number;
-  const desc = catName.get(id);
-  if (!desc) continue;
+  const desc = catName.get(id)!;
   const name = String(desc.name).trim();
   let slug = slugify(name);
   if (usedCatSlugs.has(slug)) slug = `${slug}-${id}`;
