@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
-import { countActiveProducts, getAllCategories, getProducts, subtreeIds } from "@/lib/catalog";
+import { countActiveProducts, getAllCategories, getCategoryThumb, getProducts, subtreeIds } from "@/lib/catalog";
+import { getImageUrl } from "@/lib/r2";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const all = await getAllCategories();
   const cat = all.find((c) => c.slug === slug);
-  return { title: cat ? cat.name : "Category" };
+  if (!cat) return { title: "Category" };
+  const description = `Shop ${cat.name} at FomaFamily — made-to-order personalized gifts, engraved and printed in our workshop. Custom text, colors and photo uploads.`;
+  const canonical = absoluteUrl(`/kategori/${cat.slug}`);
+  const thumbKey = await getCategoryThumb(subtreeIds(all, cat.id));
+  const ogImages = thumbKey
+    ? [{ url: absoluteUrl(getImageUrl(thumbKey, 800)), alt: cat.name }]
+    : undefined;
+  return {
+    title: cat.name,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: cat.name,
+      description,
+      type: "website",
+      url: canonical,
+      siteName: "FomaFamily",
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: cat.name,
+      description,
+      images: ogImages?.map((i) => i.url),
+    },
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {

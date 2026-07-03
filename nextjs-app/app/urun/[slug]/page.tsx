@@ -5,6 +5,8 @@ import { Tag } from "@/components/price-tag";
 import { formatPrice, getProductBySlug } from "@/lib/catalog";
 import { descriptionToSafeHtml } from "@/lib/html";
 import { getImageUrl } from "@/lib/r2";
+import { descriptionToPlainText } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +15,39 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const data = await getProductBySlug(slug);
-  return { title: data ? data.product.name : "Product" };
+  // Missing or draft products 404 in the page component — keep metadata minimal.
+  if (!data || data.product.status !== "active") {
+    return { title: data ? data.product.name : "Product" };
+  }
+  const { product, images } = data;
+  const description = product.description
+    ? descriptionToPlainText(product.description)
+    : `${product.name} — a made-to-order personalized gift from FomaFamily, engraved and printed in our workshop.`;
+  const canonical = absoluteUrl(`/urun/${product.slug}`);
+  // getProductBySlug orders images primary-first.
+  const primary = images[0];
+  const ogImages = primary
+    ? [{ url: absoluteUrl(getImageUrl(primary.r2Key, 800)), alt: primary.altText ?? product.name }]
+    : undefined;
+  return {
+    title: product.name,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: product.name,
+      description,
+      type: "website",
+      url: canonical,
+      siteName: "FomaFamily",
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
+      images: ogImages?.map((i) => i.url),
+    },
+  };
 }
 
 const OPTION_TYPE_LABEL: Record<string, string> = {
