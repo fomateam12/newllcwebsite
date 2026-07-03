@@ -15,3 +15,8 @@ database_id = "07579979-b2fe-4c94-9d33-7c0936b4e9a2"
 [[r2_buckets]]
 binding = "IMAGES"
 bucket_name = "fomawebsitev2"
+
+# Cloudflare Images binding — on-the-fly resize/re-encode in the image
+# proxy route. First 5k unique transformations/month are free.
+[images]
+binding = "IMAGES_API"

@@ -26,12 +26,13 @@ export async function uploadImage(
  * cache headers). NEXT_PUBLIC_R2_PUBLIC_URL can override with a public
  * bucket/custom domain later without touching call sites.
  */
-export function getImageUrl(key: string): string {
+export function getImageUrl(key: string, width?: 200 | 400 | 800 | 1200): string {
   const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
   if (base) {
     return `${base.replace(/\/$/, "")}/${key}`;
   }
-  return `/api/images/${key.split("/").map(encodeURIComponent).join("/")}`;
+  const path = `/api/images/${key.split("/").map(encodeURIComponent).join("/")}`;
+  return width ? `${path}?w=${width}` : path;
 }
 
 /** Fetch an object directly from the bucket (for serving via a route handler). */

@@ -26,7 +26,7 @@ const OPTION_TYPE_LABEL: Record<string, string> = {
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const data = await getProductBySlug(slug);
-  if (!data) notFound();
+  if (!data || data.product.status !== "active") notFound();
   const { product, images, options, category } = data;
 
   const safeDescription = product.description
@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: Props) {
             {hero ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={getImageUrl(hero.r2Key)}
+                src={getImageUrl(hero.r2Key, 1200)}
                 alt={hero.altText ?? product.name}
                 className="aspect-square w-full object-cover"
               />
@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: Props) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={img.id}
-                  src={getImageUrl(img.r2Key)}
+                  src={getImageUrl(img.r2Key, 200)}
                   alt=""
                   loading="lazy"
                   className="aspect-square w-full rounded-sm border border-line object-cover"

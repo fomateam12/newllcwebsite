@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: ProductWithThumb }) {
         {product.thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={getImageUrl(product.thumb)}
+            src={getImageUrl(product.thumb, 400)}
             alt={product.name}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"

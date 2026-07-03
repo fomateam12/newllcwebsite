@@ -49,7 +49,7 @@ export default async function Home() {
                 {thumb ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={getImageUrl(thumb)}
+                    src={getImageUrl(thumb, 400)}
                     alt=""
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
