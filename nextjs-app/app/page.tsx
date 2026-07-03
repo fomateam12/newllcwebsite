@@ -1,52 +1,73 @@
-import { getDb, schema } from "@/lib/db";
+import Link from "next/link";
+import { countActiveProducts, getAllCategories, getCategoryThumb, subtreeIds } from "@/lib/catalog";
+import { getImageUrl } from "@/lib/r2";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let categories: (typeof schema.categories.$inferSelect)[] = [];
-  let error: string | null = null;
+  const all = await getAllCategories();
+  const roots = all.filter((c) => c.parentId === null);
 
-  try {
-    const db = getDb();
-    categories = await db
-      .select()
-      .from(schema.categories)
-      .orderBy(schema.categories.sortOrder);
-  } catch (e) {
-    error = e instanceof Error ? e.message : String(e);
-  }
+  const tiles = (
+    await Promise.all(
+      roots.map(async (cat) => {
+        const ids = subtreeIds(all, cat.id);
+        const productCount = await countActiveProducts(ids);
+        if (productCount === 0) return null;
+        const thumb = await getCategoryThumb(ids);
+        return { cat, productCount, thumb };
+      }),
+    )
+  ).filter((t): t is NonNullable<typeof t> => t !== null);
+  tiles.sort((a, b) => b.productCount - a.productCount);
 
   return (
-    <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-2 text-2xl font-bold">FomaFamily v2 — D1 smoke test</h1>
-      <p className="mb-6 text-sm text-gray-500">
-        Lists rows from the <code>categories</code> table to verify the D1
-        binding works.
-      </p>
+    <div className="mx-auto max-w-6xl px-5">
+      <section className="border-b border-line py-12 sm:py-16">
+        <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-amber">
+          Personalized, made to order
+        </p>
+        <h1 className="max-w-2xl font-display text-4xl font-medium leading-tight text-ink sm:text-5xl">
+          Gifts with your name on them — literally.
+        </h1>
+        <p className="mt-4 max-w-xl text-ink/60">
+          Engraved tumblers, custom blankets, family matching shirts. Every
+          piece is printed or laser-engraved for you in our workshop.
+        </p>
+      </section>
 
-      {error ? (
-        <div className="rounded border border-red-300 bg-red-50 p-4 text-red-800">
-          <p className="font-semibold">D1 query failed</p>
-          <p className="mt-1 text-sm">{error}</p>
-        </div>
-      ) : categories.length === 0 ? (
-        <div className="rounded border border-green-300 bg-green-50 p-4 text-green-800">
-          <p className="font-semibold">Connected — no categories yet</p>
-          <p className="mt-1 text-sm">
-            The query succeeded but the table is empty. Data migration comes in
-            a later step.
-          </p>
-        </div>
-      ) : (
-        <ul className="divide-y rounded border">
-          {categories.map((c) => (
-            <li key={c.id} className="flex items-center justify-between p-3">
-              <span>{c.name}</span>
-              <code className="text-sm text-gray-500">/{c.slug}</code>
-            </li>
+      <section className="py-10">
+        <h2 className="mb-6 font-display text-2xl text-ink">Shop by category</h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {tiles.map(({ cat, productCount, thumb }) => (
+            <Link
+              key={cat.id}
+              href={`/kategori/${cat.slug}`}
+              className="group overflow-hidden rounded-md border border-line bg-white transition-shadow hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
+            >
+              <div className="aspect-[4/3] overflow-hidden bg-line/30">
+                {thumb ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={getImageUrl(thumb)}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                ) : null}
+              </div>
+              <div className="flex items-baseline justify-between gap-2 p-3">
+                <h3 className="font-display text-lg leading-tight text-pine-deep">
+                  {cat.name}
+                </h3>
+                <span className="shrink-0 font-mono text-xs text-ink/50">
+                  {productCount}
+                </span>
+              </div>
+            </Link>
           ))}
-        </ul>
-      )}
-    </main>
+        </div>
+      </section>
+    </div>
   );
 }

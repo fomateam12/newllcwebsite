@@ -21,17 +21,17 @@ export async function uploadImage(
 }
 
 /**
- * Resolve a public URL for an R2 key.
- * Uses NEXT_PUBLIC_R2_PUBLIC_URL (custom domain or r2.dev public bucket URL)
- * when set; falls back to a same-origin /api/images/[key] route (to be
- * implemented) so the app still works without a public bucket.
+ * Resolve a URL for an R2 key. Default: the same-origin
+ * /api/images/[...key] proxy route (bucket stays private, immutable
+ * cache headers). NEXT_PUBLIC_R2_PUBLIC_URL can override with a public
+ * bucket/custom domain later without touching call sites.
  */
 export function getImageUrl(key: string): string {
   const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
   if (base) {
     return `${base.replace(/\/$/, "")}/${key}`;
   }
-  return `/api/images/${encodeURIComponent(key)}`;
+  return `/api/images/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 /** Fetch an object directly from the bucket (for serving via a route handler). */

@@ -3,25 +3,46 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --paper: #fcfbf7;
+  --ink: #262119;
+  --pine: #2e5a4e;
+  --pine-deep: #234639;
+  --amber: #b8862b;
+  --line: #e7e1d5;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Legacy OpenCart descriptions, sanitized then lightly re-typeset */
+.prose-legacy {
+  line-height: 1.7;
+}
+.prose-legacy p,
+.prose-legacy div {
+  margin-bottom: 0.75rem;
+}
+.prose-legacy ul,
+.prose-legacy ol {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+  list-style: disc;
+}
+.prose-legacy a {
+  color: var(--pine);
+  text-decoration: underline;
+}
+.prose-legacy h2,
+.prose-legacy h3,
+.prose-legacy h4 {
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
