@@ -3,49 +3,131 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Tag } from "@/components/price-tag";
+import { deliveryEstimateLabel } from "@/lib/cart-delivery";
 import { formatPrice } from "@/lib/format";
-import { useCart } from "./cart-context";
+import { useCart, type CartItem } from "./cart-context";
+import { CustomizationSummary } from "./customization-summary";
+
+/** Real category slugs from the catalog (see migrations/0002_seed_data.sql). */
+const SUGGESTED_CATEGORIES: Array<{ slug: string; name: string; blurb: string }> = [
+  { slug: "gifts", name: "Gifts", blurb: "Keepsakes for every occasion" },
+  { slug: "clothing-and-fashion", name: "Clothing & Fashion", blurb: "Custom tees, hats & totes" },
+  { slug: "home-living", name: "Home & Living", blurb: "Blankets, mugs & decor" },
+  { slug: "christmas", name: "Christmas", blurb: "Personalized ornaments & more" },
+];
+
+function EmptyCart() {
+  return (
+    <div className="rounded-md border border-line bg-white p-8">
+      <div className="text-center">
+        <p className="font-display text-xl text-ink">Your cart is empty.</p>
+        <p className="mt-2 text-sm text-ink/60">
+          Every piece is made to order — start with one of our favorite corners
+          of the shop.
+        </p>
+      </div>
+      <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+        {SUGGESTED_CATEGORIES.map((cat) => (
+          <li key={cat.slug}>
+            <Link
+              href={`/kategori/${cat.slug}`}
+              className="block rounded-md border border-dashed border-pine/40 bg-paper/60 px-4 py-3 transition-colors hover:border-pine hover:bg-white"
+            >
+              <span className="font-medium text-pine">{cat.name} →</span>
+              <span className="mt-0.5 block text-xs text-ink/60">{cat.blurb}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function LineItem({ item }: { item: CartItem }) {
+  const { setQuantity, removeItem } = useCart();
+  const productHref = item.slug ? `/urun/${item.slug}` : null;
+
+  const image = (
+    <div className="h-20 w-20 flex-none overflow-hidden rounded-sm border border-line bg-line/30">
+      {item.image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={item.image} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-[10px] text-ink/40">
+          No photo
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <li className="flex flex-wrap items-start gap-4 p-4 sm:flex-nowrap">
+      {productHref ? <Link href={productHref}>{image}</Link> : image}
+
+      <div className="min-w-0 flex-1">
+        {productHref ? (
+          <Link href={productHref} className="line-clamp-2 text-sm text-ink/90 hover:text-pine">
+            {item.name}
+          </Link>
+        ) : (
+          <span className="line-clamp-2 text-sm text-ink/90">{item.name}</span>
+        )}
+        <CustomizationSummary data={item.customizationData} className="mt-1.5" />
+        <div className="mt-1.5">
+          <Tag>{formatPrice(item.unitPrice)} each</Tag>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1 font-mono text-sm">
+        <button
+          type="button"
+          onClick={() => setQuantity(item.productId, item.quantity - 1)}
+          aria-label={`Decrease quantity of ${item.name}`}
+          className="h-7 w-7 rounded-sm border border-line text-ink/70 hover:border-pine hover:text-pine"
+        >
+          −
+        </button>
+        <span className="w-8 text-center" aria-live="polite">{item.quantity}</span>
+        <button
+          type="button"
+          onClick={() => setQuantity(item.productId, item.quantity + 1)}
+          aria-label={`Increase quantity of ${item.name}`}
+          className="h-7 w-7 rounded-sm border border-line text-ink/70 hover:border-pine hover:text-pine"
+        >
+          +
+        </button>
+      </div>
+
+      <div className="flex w-24 flex-col items-end gap-1.5">
+        <span className="font-mono text-sm text-ink">
+          {formatPrice(item.unitPrice * item.quantity)}
+        </span>
+        <button
+          type="button"
+          onClick={() => removeItem(item.productId)}
+          className="font-mono text-xs text-ink/40 underline underline-offset-4 hover:text-pine"
+        >
+          Remove
+        </button>
+      </div>
+    </li>
+  );
+}
 
 export function CartView({ status }: { status?: string }) {
-  const { items, subtotal, setQuantity, removeItem, clear } = useCart();
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { items, subtotal, clear } = useCart();
+
+  // Client-only so the SSR shell never disagrees with the visitor's clock.
+  const [deliveryLabel, setDeliveryLabel] = useState<string | null>(null);
+  useEffect(() => {
+    setDeliveryLabel(deliveryEstimateLabel());
+  }, []);
 
   // Back from a successful Stripe Checkout: the order is recorded by the
-  // webhook; clear the local cart.
+  // webhook; clear the local cart (cookie + display cache included).
   useEffect(() => {
     if (status === "success") clear();
   }, [status, clear]);
-
-  async function checkout() {
-    setSubmitting(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map(({ productId, quantity, customizationData }) => ({
-            productId,
-            quantity,
-            ...(customizationData !== undefined ? { customizationData } : {}),
-          })),
-        }),
-      });
-      const data = (await res.json().catch(() => null)) as
-        | { url?: string; error?: string }
-        | null;
-      if (!res.ok || !data?.url) {
-        setError(data?.error ?? "Checkout is unavailable right now. Please try again.");
-        setSubmitting(false);
-        return;
-      }
-      window.location.href = data.url;
-    } catch {
-      setError("Checkout is unavailable right now. Please try again.");
-      setSubmitting(false);
-    }
-  }
 
   if (status === "success") {
     return (
@@ -72,85 +154,39 @@ export function CartView({ status }: { status?: string }) {
       )}
 
       {items.length === 0 ? (
-        <div className="rounded-md border border-line bg-white p-8 text-center">
-          <p className="text-ink/60">Your cart is empty.</p>
-          <Link href="/" className="mt-4 inline-block font-mono text-sm text-pine underline underline-offset-4 hover:text-pine-deep">
-            Browse gifts →
-          </Link>
-        </div>
+        <EmptyCart />
       ) : (
         <>
           <ul className="divide-y divide-line rounded-md border border-line bg-white">
             {items.map((item) => (
-              <li key={item.productId} className="flex items-center gap-4 p-4">
-                <div className="h-16 w-16 flex-none overflow-hidden rounded-sm border border-line bg-line/30">
-                  {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.image} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-[10px] text-ink/40">
-                      No photo
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <Link href={`/urun/${item.slug}`} className="line-clamp-2 text-sm text-ink/90 hover:text-pine">
-                    {item.name}
-                  </Link>
-                  <div className="mt-1">
-                    <Tag>{formatPrice(item.unitPrice)}</Tag>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 font-mono text-sm">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(item.productId, item.quantity - 1)}
-                    aria-label={`Decrease quantity of ${item.name}`}
-                    className="h-7 w-7 rounded-sm border border-line text-ink/70 hover:border-pine hover:text-pine"
-                  >
-                    −
-                  </button>
-                  <span className="w-8 text-center" aria-live="polite">{item.quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(item.productId, item.quantity + 1)}
-                    aria-label={`Increase quantity of ${item.name}`}
-                    className="h-7 w-7 rounded-sm border border-line text-ink/70 hover:border-pine hover:text-pine"
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.productId)}
-                  className="font-mono text-xs text-ink/40 underline underline-offset-4 hover:text-pine"
-                >
-                  Remove
-                </button>
-              </li>
+              <LineItem key={item.productId} item={item} />
             ))}
           </ul>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-ink/70">
-              Subtotal{" "}
-              <span className="font-mono text-base text-ink">{formatPrice(subtotal)}</span>
-              <span className="ml-2 text-xs text-ink/50">Shipping &amp; tax at checkout</span>
+          <div className="mt-6 rounded-md border border-line bg-white p-5">
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="text-sm text-ink/70">
+                Subtotal ({items.reduce((n, i) => n + i.quantity, 0)} item
+                {items.reduce((n, i) => n + i.quantity, 0) === 1 ? "" : "s"})
+              </span>
+              <span className="font-mono text-lg text-ink">{formatPrice(subtotal)}</span>
+            </div>
+            <p className="mt-1 text-xs text-ink/50">
+              Shipping &amp; taxes calculated at checkout.
             </p>
-            <button
-              type="button"
-              onClick={checkout}
-              disabled={submitting}
-              className="rounded-md bg-pine px-6 py-3 font-medium text-white transition-colors hover:bg-pine-deep disabled:cursor-wait disabled:opacity-60"
+            {deliveryLabel && (
+              <p className="mt-2 text-xs text-pine">
+                <span aria-hidden>⌁ </span>
+                {deliveryLabel}
+              </p>
+            )}
+            <Link
+              href="/checkout"
+              className="mt-4 block w-full rounded-md bg-pine px-6 py-3 text-center font-medium text-white transition-colors hover:bg-pine-deep sm:ml-auto sm:w-auto sm:max-w-xs"
             >
-              {submitting ? "Heading to checkout…" : "Checkout"}
-            </button>
+              Proceed to checkout
+            </Link>
           </div>
-          {error && (
-            <p role="alert" className="mt-3 text-sm text-amber">
-              {error}
-            </p>
-          )}
         </>
       )}
     </div>
