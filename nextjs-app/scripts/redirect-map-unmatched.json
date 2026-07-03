@@ -1,0 +1,222 @@
+[
+  {
+    "old_path": "/test2",
+    "query": "category_id=36",
+    "reason": "category_id 36 not found in D1 categories"
+  },
+  {
+    "old_path": "/mouse",
+    "query": "category_id=29",
+    "reason": "category_id 29 not found in D1 categories"
+  },
+  {
+    "old_path": "/tablet",
+    "query": "category_id=57",
+    "reason": "category_id 57 not found in D1 categories"
+  },
+  {
+    "old_path": "/software",
+    "query": "category_id=17",
+    "reason": "category_id 17 not found in D1 categories"
+  },
+  {
+    "old_path": "/test11",
+    "query": "category_id=43",
+    "reason": "category_id 43 not found in D1 categories"
+  },
+  {
+    "old_path": "/test12",
+    "query": "category_id=44",
+    "reason": "category_id 44 not found in D1 categories"
+  },
+  {
+    "old_path": "/test15",
+    "query": "category_id=47",
+    "reason": "category_id 47 not found in D1 categories"
+  },
+  {
+    "old_path": "/test16",
+    "query": "category_id=48",
+    "reason": "category_id 48 not found in D1 categories"
+  },
+  {
+    "old_path": "/test17",
+    "query": "category_id=49",
+    "reason": "category_id 49 not found in D1 categories"
+  },
+  {
+    "old_path": "/test18",
+    "query": "category_id=50",
+    "reason": "category_id 50 not found in D1 categories"
+  },
+  {
+    "old_path": "/test19",
+    "query": "category_id=51",
+    "reason": "category_id 51 not found in D1 categories"
+  },
+  {
+    "old_path": "/test20",
+    "query": "category_id=52",
+    "reason": "category_id 52 not found in D1 categories"
+  },
+  {
+    "old_path": "/test25",
+    "query": "category_id=58",
+    "reason": "category_id 58 not found in D1 categories"
+  },
+  {
+    "old_path": "/test21",
+    "query": "category_id=53",
+    "reason": "category_id 53 not found in D1 categories"
+  },
+  {
+    "old_path": "/test22",
+    "query": "category_id=54",
+    "reason": "category_id 54 not found in D1 categories"
+  },
+  {
+    "old_path": "/test23",
+    "query": "category_id=55",
+    "reason": "category_id 55 not found in D1 categories"
+  },
+  {
+    "old_path": "/test24",
+    "query": "category_id=56",
+    "reason": "category_id 56 not found in D1 categories"
+  },
+  {
+    "old_path": "/test4",
+    "query": "category_id=38",
+    "reason": "category_id 38 not found in D1 categories"
+  },
+  {
+    "old_path": "/test5",
+    "query": "category_id=37",
+    "reason": "category_id 37 not found in D1 categories"
+  },
+  {
+    "old_path": "/test6",
+    "query": "category_id=39",
+    "reason": "category_id 39 not found in D1 categories"
+  },
+  {
+    "old_path": "/test7",
+    "query": "category_id=40",
+    "reason": "category_id 40 not found in D1 categories"
+  },
+  {
+    "old_path": "/test8",
+    "query": "category_id=41",
+    "reason": "category_id 41 not found in D1 categories"
+  },
+  {
+    "old_path": "/test9",
+    "query": "category_id=42",
+    "reason": "category_id 42 not found in D1 categories"
+  },
+  {
+    "old_path": "/product-8",
+    "query": "product_id=35",
+    "reason": "product_id 35 not found in D1 products"
+  },
+  {
+    "old_path": "/palm",
+    "query": "manufacturer_id=6",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/terms",
+    "query": "information_id=5",
+    "reason": "query type 'information_id' is not a product or category"
+  },
+  {
+    "old_path": "/products",
+    "query": "product/catalog",
+    "reason": "query type 'product/catalog' is not a product or category"
+  },
+  {
+    "old_path": "/all-products",
+    "query": "product/catalog",
+    "reason": "query type 'product/catalog' is not a product or category"
+  },
+  {
+    "old_path": "/chic-d-or-en-gb",
+    "query": "manufacturer_id=13",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/awesome-brand-en-gb",
+    "query": "manufacturer_id=12",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/superbrand-en-gb",
+    "query": "manufacturer_id=11",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/test-pr-manufacturers-en-gb",
+    "query": "manufacturer_id=23",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/delivery-information",
+    "query": "information_id=6",
+    "reason": "query type 'information_id' is not a product or category"
+  },
+  {
+    "old_path": "/sarah-bloom-en-gb",
+    "query": "manufacturer_id=21",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/fort-cane-en-gb",
+    "query": "manufacturer_id=17",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/privacy-policy",
+    "query": "information_id=3",
+    "reason": "query type 'information_id' is not a product or category"
+  },
+  {
+    "old_path": "/olivia-smith-en-gb",
+    "query": "manufacturer_id=19",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/about-us",
+    "query": "information_id=4",
+    "reason": "query type 'information_id' is not a product or category"
+  },
+  {
+    "old_path": "/melissa-johnson-en-gb",
+    "query": "manufacturer_id=18",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/ny-fashion-en-gb",
+    "query": "manufacturer_id=16",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/scandinavian-sunglasses-en-gb",
+    "query": "manufacturer_id=22",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/sarah-bell-en-gb",
+    "query": "manufacturer_id=20",
+    "reason": "query type 'manufacturer_id' is not a product or category"
+  },
+  {
+    "old_path": "/custom-logo-40-oz-stainless-steel-travel-mug-with-handle-tumbler-gift",
+    "query": "product_id=1729",
+    "reason": "product_id 1729 exists in D1 but status is 'draft' (not active)"
+  },
+  {
+    "old_path": "/404-Not-Found",
+    "query": "information_id=9",
+    "reason": "query type 'information_id' is not a product or category"
+  }
+]

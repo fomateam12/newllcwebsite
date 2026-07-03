@@ -1,0 +1,230 @@
+[
+  {
+    "old_path": "/newww",
+    "new_path": "/kategori/newww"
+  },
+  {
+    "old_path": "/custom-logo-shirt",
+    "new_path": "/kategori/custom-logo-shirt"
+  },
+  {
+    "old_path": "/Baby-Swaddle",
+    "new_path": "/kategori/baby-swaddle"
+  },
+  {
+    "old_path": "/picnic-blanket",
+    "new_path": "/kategori/picnic-blanket"
+  },
+  {
+    "old_path": "/accessory",
+    "new_path": "/kategori/accessory"
+  },
+  {
+    "old_path": "/bag",
+    "new_path": "/kategori/bag"
+  },
+  {
+    "old_path": "/checkbook-cover",
+    "new_path": "/kategori/checkbook-cover"
+  },
+  {
+    "old_path": "/knives",
+    "new_path": "/kategori/knives"
+  },
+  {
+    "old_path": "/leather-wallet",
+    "new_path": "/kategori/leather-wallet"
+  },
+  {
+    "old_path": "/lighter",
+    "new_path": "/kategori/lighter"
+  },
+  {
+    "old_path": "/cancer",
+    "new_path": "/kategori/cancer"
+  },
+  {
+    "old_path": "/christmas",
+    "new_path": "/kategori/christmas"
+  },
+  {
+    "old_path": "/clothing-and-fashion",
+    "new_path": "/kategori/clothing-and-fashion"
+  },
+  {
+    "old_path": "/flower-shirt",
+    "new_path": "/kategori/flower-shirt"
+  },
+  {
+    "old_path": "/sweatshirts-and-hoodies",
+    "new_path": "/kategori/sweatshirts-hoodies"
+  },
+  {
+    "old_path": "/t-shirt",
+    "new_path": "/kategori/t-shirt"
+  },
+  {
+    "old_path": "/disney",
+    "new_path": "/kategori/disney"
+  },
+  {
+    "old_path": "/family",
+    "new_path": "/kategori/family"
+  },
+  {
+    "old_path": "/gifts",
+    "new_path": "/kategori/gifts"
+  },
+  {
+    "old_path": "/couple-gift",
+    "new_path": "/kategori/couple-gift"
+  },
+  {
+    "old_path": "/custom-gifts",
+    "new_path": "/kategori/custom-gifts"
+  },
+  {
+    "old_path": "/gift-for-her",
+    "new_path": "/kategori/gift-for-her"
+  },
+  {
+    "old_path": "/gift-for-him",
+    "new_path": "/kategori/gift-for-him"
+  },
+  {
+    "old_path": "/gifts-for-grandparents",
+    "new_path": "/kategori/gifts-for-grandparents"
+  },
+  {
+    "old_path": "/home-living",
+    "new_path": "/kategori/home-living"
+  },
+  {
+    "old_path": "/beach-towels",
+    "new_path": "/kategori/beach-towels"
+  },
+  {
+    "old_path": "/beverage-holder",
+    "new_path": "/kategori/beverage-holder"
+  },
+  {
+    "old_path": "/blanket",
+    "new_path": "/kategori/blankets"
+  },
+  {
+    "old_path": "/jewelry-boxes",
+    "new_path": "/kategori/jewelry-boxes"
+  },
+  {
+    "old_path": "/ornament",
+    "new_path": "/kategori/ornament"
+  },
+  {
+    "old_path": "/passport-holder",
+    "new_path": "/kategori/passport-holder"
+  },
+  {
+    "old_path": "/portfolio",
+    "new_path": "/kategori/portfolio"
+  },
+  {
+    "old_path": "/tumbler",
+    "new_path": "/kategori/tumbler"
+  },
+  {
+    "old_path": "/valet-tray",
+    "new_path": "/kategori/valet-tray"
+  },
+  {
+    "old_path": "/water-bottle",
+    "new_path": "/kategori/water-bottle"
+  },
+  {
+    "old_path": "/kids",
+    "new_path": "/kategori/kids"
+  },
+  {
+    "old_path": "/men",
+    "new_path": "/kategori/men"
+  },
+  {
+    "old_path": "/special-days",
+    "new_path": "/kategori/special-days"
+  },
+  {
+    "old_path": "/anniversary",
+    "new_path": "/kategori/anniversary"
+  },
+  {
+    "old_path": "/back-to-school",
+    "new_path": "/kategori/back-to-school"
+  },
+  {
+    "old_path": "/birthday",
+    "new_path": "/kategori/birthday"
+  },
+  {
+    "old_path": "/cinco-de-mayo",
+    "new_path": "/kategori/cinco-de-mayo"
+  },
+  {
+    "old_path": "/easter",
+    "new_path": "/kategori/easter"
+  },
+  {
+    "old_path": "/eid",
+    "new_path": "/kategori/eid"
+  },
+  {
+    "old_path": "/father-s-day",
+    "new_path": "/kategori/father-s-day"
+  },
+  {
+    "old_path": "/graduation",
+    "new_path": "/kategori/graduation"
+  },
+  {
+    "old_path": "/halloween",
+    "new_path": "/kategori/halloween"
+  },
+  {
+    "old_path": "/independence-day",
+    "new_path": "/kategori/independence-day"
+  },
+  {
+    "old_path": "/mother-s-day",
+    "new_path": "/kategori/mother-s-day"
+  },
+  {
+    "old_path": "/st-patrick-s-day",
+    "new_path": "/kategori/st-patrick-s-day"
+  },
+  {
+    "old_path": "/thanksgiving-day",
+    "new_path": "/kategori/thanksgiving-day"
+  },
+  {
+    "old_path": "/valentine-s-day",
+    "new_path": "/kategori/valentine-s-day"
+  },
+  {
+    "old_path": "/wedding-bachelorette",
+    "new_path": "/kategori/wedding-bachelorette"
+  },
+  {
+    "old_path": "/sport-team",
+    "new_path": "/kategori/sport-team"
+  },
+  {
+    "old_path": "/vacation",
+    "new_path": "/kategori/vacation"
+  },
+  {
+    "old_path": "/women",
+    "new_path": "/kategori/women"
+  },
+  {
+    "old_path": "/woven-blanket",
+    "new_path": "/kategori/woven-blanket"
+  }
+]
