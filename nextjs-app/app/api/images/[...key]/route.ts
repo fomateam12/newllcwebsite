@@ -1,4 +1,6 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { logError } from "@/lib/logging";
+import { apiError } from "@/lib/security";
 
 /**
  * Streams product images from the private R2 bucket (env.IMAGES),
@@ -14,6 +16,22 @@ const ALLOWED_WIDTHS = new Set([200, 400, 800, 1200]);
 const IMMUTABLE = "public, max-age=31536000, immutable";
 
 export async function GET(
+  req: Request,
+  ctx: { params: Promise<{ key: string[] }> },
+) {
+  try {
+    return await serveImage(req, ctx);
+  } catch (err) {
+    // Never leak internals to the client — generic 500, details to logs.
+    logError("image_proxy_failed", {
+      path: new URL(req.url).pathname,
+      detail: err instanceof Error ? err.message : String(err),
+    });
+    return apiError("INTERNAL_ERROR", "Something went wrong", 500);
+  }
+}
+
+async function serveImage(
   req: Request,
   { params }: { params: Promise<{ key: string[] }> },
 ) {
@@ -47,9 +65,8 @@ export async function GET(
 
   const object = await env.IMAGES.get(objectKey);
   if (!object) {
-    return new Response("Image not found", {
-      status: 404,
-      headers: { "cache-control": "public, max-age=60" },
+    return apiError("IMAGE_NOT_FOUND", "Image not found", 404, {
+      "cache-control": "public, max-age=60",
     });
   }
 
@@ -74,7 +91,7 @@ export async function GET(
       // and serve the original below.
       const original = await env.IMAGES.get(objectKey);
       if (original) return originalResponse(original);
-      return new Response("Image not found", { status: 404 });
+      return apiError("IMAGE_NOT_FOUND", "Image not found", 404);
     }
   }
 

@@ -3,20 +3,42 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { decodeItemsFromMetadata } from "@/lib/checkout-metadata";
 import { getDb, schema } from "@/lib/db";
+import { log, logError, logWarn } from "@/lib/logging";
+import { limit } from "@/lib/rate-limit";
+import { apiError, getClientIp } from "@/lib/security";
 import { getStripe, webCryptoProvider } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 
+// Loose on purpose: Stripe retries with backoff and legit bursts happen
+// (batch payouts, replays from the dashboard). This only stops floods of
+// junk POSTs from a single address before signature verification burns CPU.
+const WEBHOOK_LIMIT = { max: 120, windowSec: 60 };
+
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const gate = await limit(`stripe-webhook:${ip}`, WEBHOOK_LIMIT);
+  if (!gate.allowed) {
+    log("rate_limit_triggered", {
+      key: `stripe-webhook:${ip}`,
+      ...WEBHOOK_LIMIT,
+      path: "/api/webhooks/stripe",
+    });
+    return apiError("RATE_LIMITED", "Too many requests", 429, {
+      "retry-after": String(Math.max(gate.resetAt - Math.floor(Date.now() / 1000), 1)),
+    });
+  }
+
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secret) {
-    console.error("stripe-webhook: STRIPE_WEBHOOK_SECRET is not set");
-    return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+    logError("stripe_webhook_failed", { reason: "STRIPE_WEBHOOK_SECRET is not set" });
+    return apiError("WEBHOOK_NOT_CONFIGURED", "Webhook not configured", 500);
   }
 
   const signature = request.headers.get("stripe-signature");
   if (!signature) {
-    return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
+    logWarn("stripe_webhook_failed", { reason: "missing stripe-signature header", ip });
+    return apiError("MISSING_SIGNATURE", "Missing stripe-signature header", 400);
   }
 
   const payload = await request.text();
@@ -31,18 +53,27 @@ export async function POST(request: NextRequest) {
       undefined,
       webCryptoProvider,
     );
-  } catch (err) {
-    console.warn("stripe-webhook: signature verification failed", err);
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  } catch {
+    // Details deliberately not echoed to the caller — logs only.
+    logWarn("stripe_webhook_failed", { reason: "signature verification failed", ip });
+    return apiError("INVALID_SIGNATURE", "Invalid signature", 400);
   }
+
+  log("stripe_webhook_received", { eventType: event.type, eventId: event.id });
 
   if (event.type === "checkout.session.completed") {
     try {
       await handleCheckoutCompleted(event.data.object);
     } catch (err) {
-      console.error("stripe-webhook: failed to record order", err);
-      // Non-2xx so Stripe retries — the handler is idempotent.
-      return NextResponse.json({ error: "Order recording failed" }, { status: 500 });
+      logError("stripe_webhook_failed", {
+        reason: "order recording failed",
+        eventType: event.type,
+        eventId: event.id,
+        detail: err instanceof Error ? err.message : String(err),
+      });
+      // Non-2xx so Stripe retries — the handler is idempotent. Generic
+      // message outward; the detail lives in the log line above.
+      return apiError("ORDER_RECORDING_FAILED", "Order recording failed", 500);
     }
   }
 
@@ -66,18 +97,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .where(eq(schema.orders.stripePaymentIntentId, paymentIntentId))
       .limit(1);
     if (existing) {
-      console.log(
-        `stripe-webhook: order ${existing.id} already exists for ${paymentIntentId}, skipping`,
-      );
+      log("stripe_webhook_duplicate", {
+        orderId: existing.id,
+        paymentIntentId,
+      });
       return;
     }
   }
 
   const items = decodeItemsFromMetadata(session.metadata);
   if (!items) {
-    console.error(
-      `stripe-webhook: session ${session.id} has no decodable items metadata`,
-    );
+    logError("stripe_webhook_failed", {
+      reason: "no decodable items metadata",
+      sessionId: session.id,
+    });
     // Don't retry — the metadata will never change. Surface for manual fix.
     return;
   }
@@ -134,7 +167,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
   }
 
-  console.log(
-    `stripe-webhook: recorded order ${order.id} (${items.length} items) for session ${session.id}`,
-  );
+  log("order_created", {
+    orderId: order.id,
+    sessionId: session.id,
+    itemCount: items.length,
+    total: (session.amount_total ?? 0) / 100,
+  });
 }
