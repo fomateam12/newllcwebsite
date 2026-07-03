@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCart } from "@/components/add-to-cart";
 import { Tag } from "@/components/price-tag";
 import { formatPrice, getProductBySlug } from "@/lib/catalog";
 import { descriptionToSafeHtml } from "@/lib/html";
@@ -132,15 +133,13 @@ export default async function ProductPage({ params }: Props) {
             )}
           </div>
 
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            title="Checkout is coming soon"
-            className="mt-6 w-full cursor-not-allowed rounded-md bg-pine px-6 py-3 font-medium text-white opacity-60 sm:w-auto"
-          >
-            Add to cart — coming soon
-          </button>
+          <AddToCart
+            productId={product.id}
+            slug={product.slug}
+            name={product.name}
+            unitPrice={product.basePrice}
+            image={hero ? getImageUrl(hero.r2Key, 200) : null}
+          />
 
           {options.length > 0 && (
             <section className="mt-8">

@@ -13,12 +13,14 @@
     "db:migrate:local": "wrangler d1 execute fomawebsitedatabase --file=migrations/0001_initial_schema.sql --local"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^9.9.0",
     "drizzle-orm": "^0.45.2",
     "next": "15.5.20",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "resend": "^6.16.0",
-    "sanitize-html": "^2.17.5"
+    "sanitize-html": "^2.17.5",
+    "stripe": "^22.3.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260702.1",

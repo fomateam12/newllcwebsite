@@ -107,6 +107,6 @@ export async function getProductBySlug(slug: string) {
   return { product, images, options, category };
 }
 
-export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price);
-}
+// Moved to lib/format.ts (client-safe, no Cloudflare context import);
+// re-exported here so existing server imports keep working.
+export { formatPrice } from "./format";
