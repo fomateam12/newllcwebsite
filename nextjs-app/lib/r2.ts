@@ -1,7 +1,7 @@
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 function getBucket(): R2Bucket {
-  const { env } = getRequestContext();
+  const { env } = getCloudflareContext();
   return env.IMAGES;
 }
 

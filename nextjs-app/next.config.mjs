@@ -1,9 +1,7 @@
-import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 // Make D1/R2 bindings available in `next dev` via wrangler's local platform.
-if (process.env.NODE_ENV === "development") {
-  await setupDevPlatform();
-}
+initOpenNextCloudflareForDev();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
