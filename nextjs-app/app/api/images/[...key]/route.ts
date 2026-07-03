@@ -29,10 +29,14 @@ export async function GET(
   const { env, ctx } = getCloudflareContext();
 
   // Transformed responses are not auto-cached — cache them at the edge
-  // ourselves, keyed by canonical URL + negotiated format.
-  const cache = (caches as unknown as { default: Cache }).default;
+  // ourselves, keyed by canonical URL + negotiated format. `caches` only
+  // exists on the Workers runtime; under `next dev` it is undefined.
+  const cache =
+    typeof caches !== "undefined"
+      ? (caches as unknown as { default: Cache }).default
+      : null;
   let cacheKey: Request | null = null;
-  if (width) {
+  if (width && cache) {
     const canonical = new URL(url.origin + url.pathname);
     canonical.searchParams.set("w", String(width));
     canonical.searchParams.set("fmt", format);
@@ -63,7 +67,7 @@ export async function GET(
           vary: "Accept",
         },
       });
-      if (cacheKey) ctx.waitUntil(cache.put(cacheKey, res.clone()));
+      if (cacheKey && cache) ctx.waitUntil(cache.put(cacheKey, res.clone()));
       return res;
     } catch {
       // Transform unavailable — re-read (input() consumed the stream)
