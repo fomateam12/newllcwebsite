@@ -20,3 +20,10 @@ bucket_name = "fomawebsitev2"
 # proxy route. First 5k unique transformations/month are free.
 [images]
 binding = "IMAGES_API"
+
+# Rate limiting — KV-backed fixed-window counters (lib/rate-limit.ts).
+# Namespace created 2026-07-03 via `wrangler kv namespace create RATE_LIMIT`.
+# See SECURITY-INTEGRATION.md for why KV over the ratelimit binding / DOs.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "cb4edc85761b4404af40928d7df5b9db"
