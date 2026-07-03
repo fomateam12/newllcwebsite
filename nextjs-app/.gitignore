@@ -34,6 +34,9 @@ yarn-error.log*
 .wrangler/
 .open-next/
 
+# raw OpenCart dump extract (intermediate artifact, regenerate from localhost.sql)
+/site-data-only.sql
+
 # vercel
 .vercel
 
