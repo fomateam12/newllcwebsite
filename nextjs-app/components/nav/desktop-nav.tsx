@@ -50,25 +50,43 @@ export function DesktopNav({ nav }: { nav: CategoryNavNode[] }) {
               onMouseEnter={() => setOpenId(root.id)}
               onMouseLeave={() => setOpenId((id) => (id === root.id ? null : id))}
             >
-              <button
-                type="button"
-                aria-expanded={openId === root.id}
-                aria-haspopup="true"
-                onClick={() => setOpenId((id) => (id === root.id ? null : root.id))}
-                className="inline-flex items-center gap-1 rounded-sm px-3 py-2 text-sm font-medium text-ink/80 hover:bg-pine/5 hover:text-pine-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine aria-expanded:bg-pine/5 aria-expanded:text-pine-deep"
-              >
-                {root.name}
-                <svg
-                  aria-hidden
-                  viewBox="0 0 12 12"
-                  className={`h-2.5 w-2.5 transition-transform ${openId === root.id ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
+              {/* Link navigates (hover already shows the panel for mouse users);
+                  the caret button is the disclosure for keyboard/touch. */}
+              <span className="inline-flex items-center rounded-sm text-sm font-medium text-ink/80 hover:bg-pine/5 hover:text-pine-deep">
+                <Link
+                  href={`/kategori/${root.slug}`}
+                  onClick={close}
+                  className="rounded-sm py-2 pl-3 pr-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
                 >
-                  <path d="M2 4l4 4 4-4" />
-                </svg>
-              </button>
+                  {root.name}
+                </Link>
+                <button
+                  type="button"
+                  aria-expanded={openId === root.id}
+                  aria-haspopup="true"
+                  aria-label={`${root.name} subcategories`}
+                  onClick={(e) => {
+                    // Keyboard "clicks" (detail 0) toggle; pointer clicks only
+                    // open — hover has usually opened the panel already, and a
+                    // tap/click that instantly re-closes it feels broken.
+                    // Pointer users close via mouse-leave, Escape or outside click.
+                    if (e.detail === 0) setOpenId((id) => (id === root.id ? null : root.id));
+                    else setOpenId(root.id);
+                  }}
+                  className="rounded-sm py-2 pl-1 pr-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
+                >
+                  <svg
+                    aria-hidden
+                    viewBox="0 0 12 12"
+                    className={`h-2.5 w-2.5 transition-transform ${openId === root.id ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
+                    <path d="M2 4l4 4 4-4" />
+                  </svg>
+                </button>
+              </span>
               {openId === root.id && (
                 <div className="absolute left-0 top-full z-50 min-w-64 rounded-md border border-line bg-white p-4 shadow-lg">
                   <Link
