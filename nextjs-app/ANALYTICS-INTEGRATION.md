@@ -21,6 +21,23 @@ and attribution.
 All env vars are empty placeholders in `.env.example`. With none set, the
 rendered HTML contains **zero** analytics scripts.
 
+Two implementation notes:
+
+- The consent cookie is also read **server-side**
+  (`components/analytics/consent-server.ts` via `next/headers`), so SSR
+  HTML already reflects the visitor's stored choice: banner present for
+  first-timers, GTM/Pixel bootstrap present for consented returners.
+  Side effect: every route is dynamically rendered (they nearly all were
+  already — the app runs on a Worker, so this costs nothing).
+- GTM and Pixel bootstraps are plain inline `<script>` elements rather
+  than `next/script(afterInteractive)`: App Router injects
+  afterInteractive scripts client-side post-hydration, which would keep
+  the consent-gated tags out of server HTML entirely (untestable via
+  curl, and slower for consented visitors). The just-clicked-Accept path
+  is covered by an idempotent `useEffect` bootstrap guarded by a window
+  flag. The Cloudflare beacon (src-based, consent-exempt) still uses
+  `next/script`.
+
 ## GA4 e-commerce events — where each call goes
 
 > Convention for `AnalyticsItem`: `item_id` = `String(product.id)` (D1 id),

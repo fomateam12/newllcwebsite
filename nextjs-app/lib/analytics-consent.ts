@@ -45,12 +45,16 @@ function subscribe(callback: () => void): () => void {
   return () => window.removeEventListener(CONSENT_EVENT, callback);
 }
 
-const getServerSnapshot = () => null;
-
 /**
  * React hook — current consent state, re-renders when the banner updates it.
- * Returns `null` during SSR/hydration and while no choice has been made.
+ *
+ * `initial` is the server-read cookie value (components/analytics/analytics.tsx
+ * reads it via next/headers) so SSR output already reflects the visitor's
+ * stored choice; it must match the cookie or hydration would mismatch.
+ * Returns `null` while no choice has been made.
  */
-export function useConsent(): ConsentValue | null {
-  return useSyncExternalStore(subscribe, readConsent, getServerSnapshot);
+export function useConsent(
+  initial: ConsentValue | null = null,
+): ConsentValue | null {
+  return useSyncExternalStore(subscribe, readConsent, () => initial);
 }
