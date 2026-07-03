@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import Link from "next/link";
+import { Analytics } from "@/components/analytics/analytics";
+import { ConsentBanner } from "@/components/analytics/consent-banner";
 import { CartButton } from "@/components/cart/cart-button";
 import { CartProvider } from "@/components/cart/cart-context";
 import "./globals.css";
@@ -63,6 +65,8 @@ export default function RootLayout({
             <p className="font-mono text-xs">fomafamilyllc.com</p>
           </div>
         </footer>
+        <ConsentBanner />
+        <Analytics />
       </body>
     </html>
   );
