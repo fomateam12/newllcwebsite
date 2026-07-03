@@ -1,0 +1,37 @@
+{
+  "name": "nextjs-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "preview": "npm run pages:build && wrangler pages dev",
+    "deploy": "npm run pages:build && wrangler pages deploy",
+    "db:migrate:remote": "wrangler d1 execute fomawebsitedatabase --file=migrations/0001_initial_schema.sql --remote",
+    "db:migrate:local": "wrangler d1 execute fomawebsitedatabase --file=migrations/0001_initial_schema.sql --local"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "next": "14.2.35",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.15",
+    "@cloudflare/workers-types": "^4.20260702.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5",
+    "vercel": "^54.20.0",
+    "wrangler": "^4.107.0"
+  }
+}
