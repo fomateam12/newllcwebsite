@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import Link from "next/link";
+import { CartButton } from "@/components/cart/cart-button";
+import { CartProvider } from "@/components/cart/cart-context";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -39,17 +41,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} font-sans antialiased flex min-h-screen flex-col`}
       >
-        <header className="border-b border-line">
-          <div className="mx-auto flex max-w-6xl items-baseline justify-between px-5 py-4">
-            <Link href="/" className="font-display text-2xl font-semibold tracking-tight text-pine-deep">
-              FomaFamily
-            </Link>
-            <p className="hidden text-sm text-ink/60 sm:block">
-              Made to order · engraved &amp; printed in our workshop
-            </p>
-          </div>
-        </header>
-        <main className="flex-1">{children}</main>
+        <CartProvider>
+          <header className="border-b border-line">
+            <div className="mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-5 py-4">
+              <Link href="/" className="font-display text-2xl font-semibold tracking-tight text-pine-deep">
+                FomaFamily
+              </Link>
+              <div className="flex items-baseline gap-4">
+                <p className="hidden text-sm text-ink/60 sm:block">
+                  Made to order · engraved &amp; printed in our workshop
+                </p>
+                <CartButton />
+              </div>
+            </div>
+          </header>
+          <main className="flex-1">{children}</main>
+        </CartProvider>
         <footer className="mt-16 border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-2 px-5 py-6 text-sm text-ink/50">
             <p>© {new Date().getFullYear()} Foma Family LLC</p>
